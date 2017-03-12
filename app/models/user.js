@@ -41,7 +41,7 @@ user.prototype.data = {
 
 
 //marche pas
-user.fetchUserInfoByName = function(username) {
+user.fetchUserInfoByName = function(username, callback) {
     // options.url += username;
     var http = require("http");
 
@@ -68,6 +68,8 @@ user.fetchUserInfoByName = function(username) {
         res.on("end", function () {
             var body = Buffer.concat(chunks);
             console.log(body.toString());
+            data = JSON.parse( body )
+            callback(data);
         });
     });
 
@@ -81,7 +83,6 @@ user.fetchUserInfoByID = function(id, callback) {
     console.log(id);
     //(endpoint, method, data, success)
     apiRequest.performRequestToAPI('/accounts/'+ id, 'GET', null, function (data) {
-        console.log("coucou");
         this.data.username = data.result.username;
         this.data.password = data.result.password;
         this.data.id = data.result.id;

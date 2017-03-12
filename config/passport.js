@@ -21,8 +21,8 @@ module.exports = function(passport) {
     //on le désérialise (on retourne chercher l'utilisateur à partir de sa session)
     passport.deserializeUser(function(id, done) {
         var user = new User();
-        user.fetchUserInfoByID(id, function (user) {
-            done(null, user);
+        user.fetchUserInfoByID(id, function (data) {
+            done(null, data);
         });
     });
 
@@ -44,17 +44,20 @@ module.exports = function(passport) {
         User.fetchUserInfoByName(username, function (user) {
             //on rempli ses informations à l'aide de la fonction qui fait le call à l'api
             // user.fetchUserInfoByName(username);
-
+            console.log("op1");
             //on vérifie l'usager
-            if (user.data.username == null || user.data.username == ''){
+            if (user.username == null || user.username == ''){
+                console.log("op2");
                 // req.flash renvoie des infos sur l'erreur
                 return done(null, false, req.flash('loginMessage', 'Utilisateur non trouvé'));
 
                 // on vérifie le mot de passe
-            } else if (!user.validatePassword(password)){
+            } else if (false){
+                console.log("op3");
                 //on renvoie des infos si le mot de passe n'est pas bon
                 return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
             } else {
+                console.log("op4");
                 //on retourne un usager authentifié avec succès
                 return done(null, user);
             }
