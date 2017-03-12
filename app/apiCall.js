@@ -28,11 +28,11 @@ exports.performRequestToAPI = function(endpoint, method, data, success) {
 
     //La requete https envoyée à l'api
     var req = https.request(options, function(res) {
-        res.setEncoding('utf-8');
 
         var responseString = '';
 
         res.on('data', function(data) {
+            console.log(data);
             responseString += data;
         });
 

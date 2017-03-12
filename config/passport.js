@@ -21,8 +21,9 @@ module.exports = function(passport) {
     //on le désérialise (on retourne chercher l'utilisateur à partir de sa session)
     passport.deserializeUser(function(id, done) {
         var user = new User();
-        user.fetchUserInfoByID(id);
-        done(null, user);
+        user.fetchUserInfoByID(id, function (user) {
+            done(null, user);
+        });
     });
 
 
@@ -36,26 +37,30 @@ module.exports = function(passport) {
         passReqToCallback : true // nous permet d'envoyer la req dans le callback
     },
     function(req, username, password, done) { // le callback
-
+        console.log("test");
         //on instancie un utilisateur
-        var user = new User(User.fetchUserInfoByName(username));
 
-        //on rempli ses informations à l'aide de la fonction qui fait le call à l'api
-        // user.fetchUserInfoByName(username);
 
-        //on vérifie l'usager
-        if (user.data.username == null || user.data.username == ''){
-            // req.flash renvoie des infos sur l'erreur
-            return done(null, false, req.flash('loginMessage', 'Utilisateur non trouvé'));
+        User.fetchUserInfoByName(username, function (user) {
+            //on rempli ses informations à l'aide de la fonction qui fait le call à l'api
+            // user.fetchUserInfoByName(username);
 
-            // on vérifie le mot de passe
-        } else if (!user.validatePassword(password)){
-            //on renvoie des infos si le mot de passe n'est pas bon
-            return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
-        } else {
-            //on retourne un usager authentifié avec succès
-            return done(null, user);
-        }
+            //on vérifie l'usager
+            if (user.data.username == null || user.data.username == ''){
+                // req.flash renvoie des infos sur l'erreur
+                return done(null, false, req.flash('loginMessage', 'Utilisateur non trouvé'));
+
+                // on vérifie le mot de passe
+            } else if (!user.validatePassword(password)){
+                //on renvoie des infos si le mot de passe n'est pas bon
+                return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
+            } else {
+                //on retourne un usager authentifié avec succès
+                return done(null, user);
+            }
+        });
+
+
 
     }));
 

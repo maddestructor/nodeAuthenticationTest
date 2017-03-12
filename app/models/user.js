@@ -77,9 +77,11 @@ user.fetchUserInfoByName = function(username) {
 };
 
 //marche pas
-user.fetchUserInfoByID = function(id) {
+user.fetchUserInfoByID = function(id, callback) {
     console.log(id);
+    //(endpoint, method, data, success)
     apiRequest.performRequestToAPI('/accounts/'+ id, 'GET', null, function (data) {
+        console.log("coucou");
         this.data.username = data.result.username;
         this.data.password = data.result.password;
         this.data.id = data.result.id;
@@ -103,8 +105,10 @@ user.fetchUserInfoByID = function(id) {
         this.data.creditCard = data.result.creditCard;
         this.data.isAdmin = data.result.isAdmin;
         this.data.creditBalance = data.result.creditBalance;
+        callback(data);
     });
     console.log('Completed user fetching to api');
+
 };
 
 //on valide le mot de passe de l'utilisateur
